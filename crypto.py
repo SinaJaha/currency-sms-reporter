@@ -1,4 +1,3 @@
-import json
 import requests
 import urllib.parse
 from datetime import datetime
@@ -8,8 +7,13 @@ def crypto_rate(assets):
     # getting the current exchange rates for the desired assets
     assets_string = urllib.parse.quote(str(assets).replace("'", '"').replace(' ', ''))
     link = f"https://api4.binance.com/api/v3/ticker/24hr?symbols={assets_string}"
-    response = requests.get(link).json()
 
+
+    response = requests.get(link).json()
+    if 'code' in response:
+        return f"Error in getting crypto!\ncode: {response['code']}\nerror: {response['msg']}"
+ 
+    
 
     # Prepare a dictionary to hold the filtered rates
     filtered_rates = {}
@@ -19,11 +23,8 @@ def crypto_rate(assets):
         currency = item['symbol'][3:6]
         name = item['symbol'][:3]
         percent_change = item['priceChangePercent']
-        print(item['priceChangePercent'])
-
     
         if float(percent_change) > 0:
-            print("check")
             percent_change = f"+{round(float(percent_change), 2)}%"
         else:
             percent_change = f"{round(float(percent_change), 2)}%"
@@ -37,5 +38,6 @@ def crypto_rate(assets):
             'price_change': f"{round(float(item['priceChange']), 2)}",
             'price_change_percent': percent_change
         }  
-
+  
+    
     return filtered_rates

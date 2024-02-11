@@ -10,7 +10,7 @@ def main():
     prev_currency_days = 1
     amount = 100
     # choosing my desired crypto
-    desired_crypto = ['BTCEUR', 'ETHUSDT']
+    desired_crypto = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT']
     
 
     # getting the exchange rates
@@ -30,17 +30,25 @@ def main():
         difference = rate_earlier / rate_today - 1
         output += f"{k}: {rate_today:.3f} - {rate_earlier:.3f} ({difference:.2%})\n"
 
-    output += "\n\nDagens cryptokurs vs igår:\n"
+    output += "\n\n"
 
-    for k,v in crypto.items():
-        today = v['price_now']
-        earlier = v['price_earlier']
-        change = v['price_change_percent']
-        from_cur = v['from_currency']
-        output += f"{k}: {today} - {earlier} {from_cur} ({change})\n"
+    # getting the crypto values
+    try:
+        out = "Dagens cryptokurs vs igår:\n"
+        for k,v in crypto.items():
+            today = v['price_now']
+            earlier = v['price_earlier']
+            change = v['price_change_percent']
+            from_cur = v['from_currency']
+            out += f"{k}: {today} - {earlier} {from_cur} ({change})\n"
+        output += out
+    except:
+        output += crypto
+    
+
 
     print(output)
-    send_sms(output)
+    #send_sms(output)
 
 
 # run script
