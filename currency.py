@@ -7,8 +7,12 @@ def currency_today(fromCurrency, amount=100, shownCurrencies=[]):
 
 
 def currency_previous(fromCurrency,daysAgo, amount=100, shownCurrencies=[]):
-    last_week = date.today() - timedelta(days=daysAgo)
-    return exchange(fromCurrency, last_week.strftime('%Y-%m-%d'), amount, shownCurrencies)
+    early_date = date.today() - timedelta(days=daysAgo)
+    # checking if the date is a weekend, if so, we go back to the previous friday
+    while early_date.weekday() in [5, 6]:
+        early_date -= timedelta(days=1)
+
+    return exchange(fromCurrency, early_date.strftime('%Y-%m-%d'), amount, shownCurrencies)
 
 
 def exchange(fromCurrency, cur_date, amount, shownCurrencies=[]):
